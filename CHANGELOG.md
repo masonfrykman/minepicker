@@ -1,6 +1,6 @@
 # Minepicker (GUI) changelog
 
-## next release
+## SIMBA patch 3
 
 - Added actual settings in the settings menu
 - Added Change password & Logout settings options
