@@ -343,11 +343,11 @@ class SettingsState extends State<SettingsMenu> {
         ),
         const Divider(),
         Text(
-          "Minepicker version SIMBA patch 3",
+          "Minepicker version SIMBA patch 4",
           style: GoogleFonts.notoSansMono(fontSize: 15),
         ),
         Text(
-          "July 26, 2022",
+          "July 28, 2022",
           style: GoogleFonts.notoSansMono(fontSize: 15),
         ),
         SizedBox.square(dimension: 10),
