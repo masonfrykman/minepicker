@@ -1,5 +1,9 @@
 # Minepicker (GUI) changelog
 
+## SIMBA patch 4
+
+- Static port support
+
 ## SIMBA patch 3
 
 - Added actual settings in the settings menu

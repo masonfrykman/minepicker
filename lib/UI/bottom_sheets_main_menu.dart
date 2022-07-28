@@ -498,6 +498,20 @@ class ChangelogWidget extends StatelessWidget {
             Divider(thickness: 2),
             SizedBox.square(dimension: 10),
             Text(
+              "SIMBA patch 4",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "July 28, 2022",
+              style: TextStyle(fontSize: 20),
+            ),
+            Text("(you are here)"),
+            SizedBox.square(dimension: 10),
+            Text('''\u2022 Static port support'''),
+            SizedBox.square(dimension: 10),
+            Divider(),
+            SizedBox.square(dimension: 10),
+            Text(
               "SIMBA patch 3",
               style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
@@ -505,7 +519,6 @@ class ChangelogWidget extends StatelessWidget {
               "July 26, 2022",
               style: TextStyle(fontSize: 20),
             ),
-            Text("(you are here)"),
             SizedBox.square(dimension: 10),
             Text('''\u2022 Added actual settings in the settings menu.
 \u2022 Added Change password & Logout settings options.

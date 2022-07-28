@@ -165,7 +165,8 @@ class World {
         .body;
   }
 
-  void startServer(ScaffoldMessengerState notifyOnError) async {
+  void startServer(ScaffoldMessengerState notifyOnError,
+      {bool tryStatic = false}) async {
     if (await getStatus() != RunStatus.stopped) {
       return;
     }
@@ -173,7 +174,8 @@ class World {
     final startRequest = await share.client.post(
         Uri.parse(
             "http://${share.serverIP}:${share.serverPort}/instance/$uuid/game/start"),
-        headers: {"x-username": share.username, "x-password": share.password});
+        headers: {"x-username": share.username, "x-password": share.password},
+        body: "try-static=${tryStatic ? "true" : "false"}");
 
     if (startRequest.statusCode != 200) {
       notifyOnError.clearSnackBars();

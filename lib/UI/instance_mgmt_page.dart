@@ -111,7 +111,35 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
         color: Colors.green,
         child: InkWell(
             onTap: () {
-              widget.world.startServer(ScaffoldMessenger.of(context));
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text("Start Configuration"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              widget.world
+                                  .startServer(ScaffoldMessenger.of(context));
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Normal (dynamic port)")),
+                        TextButton(
+                            onPressed: () {
+                              widget.world.startServer(
+                                  ScaffoldMessenger.of(context),
+                                  tryStatic: true);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("With Static Port")),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Cancel"))
+                      ],
+                    );
+                  });
             },
             borderRadius: BorderRadius.all(Radius.elliptical(10, 10)),
             child: SizedBox(
