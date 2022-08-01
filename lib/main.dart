@@ -12,6 +12,11 @@ class Minepicker extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Minepicker',
+        darkTheme: ThemeData(
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.dark(
+                primary: Colors.deepPurple,
+                secondary: Colors.deepPurpleAccent)),
         theme: ThemeData(
           // This is the theme of your application.
           //
@@ -22,7 +27,8 @@ class Minepicker extends StatelessWidget {
           // or simply save your changes to "hot reload" in a Flutter IDE).
           // Notice that the counter didn't reset back to zero; the application
           // is not restarted.
-          primarySwatch: Colors.blue,
+          brightness: Brightness.light,
+          primarySwatch: Colors.deepPurple,
         ),
         home: const Determiner(),
         debugShowCheckedModeBanner: false);

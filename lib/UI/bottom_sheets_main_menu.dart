@@ -146,13 +146,19 @@ class CreateWorldSheetState extends State<CreateWorldSheetWidget> {
               Navigator.of(context).pop();
               return;
             },
-            child: const Text("Submit")),
+            child: const Text(
+              "Submit",
+              style: TextStyle(color: Colors.white),
+            )),
         const SizedBox.square(dimension: 10),
         ElevatedButton(
           onPressed: (() {
             _formKey.currentState?.reset();
           }),
-          child: const Text("Reset"),
+          child: const Text(
+            "Reset",
+            style: TextStyle(color: Colors.white),
+          ),
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.red)),
         )
@@ -446,7 +452,10 @@ class EditServerState extends State<EditServerConfigs> {
             onPressed: () async {
               Navigator.of(context).pop();
             },
-            child: const Text("Cancel")),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: Colors.white),
+            )),
         const SizedBox.square(dimension: 10),
         ElevatedButton(
           onPressed: () async {
@@ -465,7 +474,10 @@ class EditServerState extends State<EditServerConfigs> {
             Navigator.of(context).pop();
             return;
           },
-          child: const Text("Submit"),
+          child: const Text(
+            "Submit",
+            style: TextStyle(color: Colors.white),
+          ),
           style: ButtonStyle(
               backgroundColor: MaterialStateProperty.all(Colors.red)),
         )

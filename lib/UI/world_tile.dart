@@ -24,7 +24,7 @@ class WorldTile extends StatelessWidget {
         height: 110,
         margin: EdgeInsets.all(15),
         child: Material(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             shadowColor: Colors.black,
             elevation: 10,
             borderRadius: BorderRadius.all(Radius.elliptical(15, 15)),
@@ -49,7 +49,9 @@ class WorldTile extends StatelessWidget {
                         softWrap: true,
                         world.name,
                         style: GoogleFonts.rubik(
-                            fontSize: 50, fontWeight: FontWeight.w600),
+                            fontSize: 50,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white),
                         overflow: TextOverflow.fade,
                       ),
                     ),
@@ -58,8 +60,7 @@ class WorldTile extends StatelessWidget {
                       children: [
                         IconButton(
                             padding: EdgeInsets.zero,
-                            disabledColor: Colors.black,
-                            hoverColor: Colors.red,
+                            disabledColor: Colors.white,
                             onPressed: null,
                             icon: Icon(
                               Icons.chevron_right,

@@ -51,7 +51,7 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
     return Material(
       borderRadius: const BorderRadius.all(Radius.elliptical(5, 5)),
       elevation: 2,
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.primary,
       child: Padding(
           padding: EdgeInsets.all(15),
           child: Column(
@@ -59,7 +59,10 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
             children: [
               Text(
                 "${widget.share.serverIP}:${widget.world.remotePort}",
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    fontSize: 35,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               )
             ],
           )),
@@ -70,7 +73,10 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
     List<Widget> columnChildren = [];
 
     for (String player in await widget.world.playersList()) {
-      columnChildren.add(Text(player));
+      columnChildren.add(Text(
+        player,
+        style: TextStyle(color: Colors.white),
+      ));
     }
 
     setState(() {
@@ -214,7 +220,10 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
     List<Text> gather = [];
 
     for (String cfgs in await widget.world.configs()) {
-      gather.add(Text(cfgs));
+      gather.add(Text(
+        cfgs,
+        style: TextStyle(color: Colors.white),
+      ));
     }
 
     setState(() {
@@ -404,14 +413,29 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
         Material(
           child: SizedBox(
             child: DecoratedBox(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.bottomRight,
-                      end: Alignment.topLeft,
-                      colors: [
-                    Color.fromRGBO(255, 199, 150, 1),
-                    Color.fromRGBO(255, 107, 149, 1)
-                  ])),
+              decoration: BoxDecoration(
+                  gradient: MediaQuery.of(context).platformBrightness ==
+                          Brightness.light
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                              Color.fromRGBO(102, 126, 234, 1),
+                              Color.fromRGBO(118, 75, 162, 1)
+                            ])
+                      : LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          stops: [
+                              0,
+                              0.48,
+                              1,
+                            ],
+                          colors: [
+                              Color.fromRGBO(172, 50, 228, 1),
+                              Color.fromRGBO(122, 24, 242, 1),
+                              Color.fromRGBO(72, 1, 255, 1),
+                            ])),
               child: Align(
                 child: FittedBox(
                     fit: BoxFit.fitWidth,
@@ -550,120 +574,131 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
             alignment: WrapAlignment.center,
             children: [
               portWidget(),
-              Material(
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.elliptical(5, 5)),
-                elevation: 2,
-                child: SizedBox(
-                  child: Padding(
-                    child: Material(
+              widget.world.runStatus == RunStatus.running
+                  ? Material(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius:
+                          const BorderRadius.all(Radius.elliptical(5, 5)),
+                      elevation: 2,
+                      child: SizedBox(
+                        child: Padding(
+                          child: Material(
+                            child: Padding(
+                              child: TextFormField(
+                                controller: sendCmdClearer,
+                                cursorColor: Colors.white,
+                                style: TextStyle(color: Colors.white),
+                                onFieldSubmitted: (value) {
+                                  widget.world.sendCommand(
+                                      value, ScaffoldMessenger.of(context));
+                                  sendCmdClearer.clear();
+                                },
+                                decoration: InputDecoration(
+                                    enabled: widget.world.runStatus ==
+                                            RunStatus.running
+                                        ? true
+                                        : false,
+                                    hintText: "Send command",
+                                    helperText:
+                                        "Hit enter to send. Command has no effect if instance is stopped or starting.",
+                                    helperStyle:
+                                        TextStyle(color: Colors.white60),
+                                    hintStyle: TextStyle(color: Colors.white60),
+                                    enabledBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white60)),
+                                    focusedBorder: UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.white))),
+                              ),
+                              padding: EdgeInsets.all(5),
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.elliptical(5, 5)),
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          padding: EdgeInsets.all(15),
+                        ),
+                        width: 500,
+                      ),
+                    )
+                  : SizedBox.shrink(),
+              widget.world.runStatus == RunStatus.running
+                  ? Material(
+                      borderRadius:
+                          const BorderRadius.all(Radius.elliptical(5, 5)),
+                      elevation: 2,
+                      color: Theme.of(context).colorScheme.primary,
                       child: Padding(
-                        child: TextFormField(
-                          controller: sendCmdClearer,
-                          cursorColor: Colors.white,
-                          style: TextStyle(color: Colors.white),
-                          onFieldSubmitted: (value) {
-                            widget.world.sendCommand(
-                                value, ScaffoldMessenger.of(context));
-                            sendCmdClearer.clear();
-                          },
-                          decoration: InputDecoration(
-                              enabled:
-                                  widget.world.runStatus == RunStatus.running
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Player List",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 35,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              SizedBox.square(dimension: 15),
+                              playersInGame
+                            ],
+                          )),
+                    )
+                  : SizedBox.shrink(),
+              widget.world.runStatus == RunStatus.stopped
+                  ? Material(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius:
+                          const BorderRadius.all(Radius.elliptical(5, 5)),
+                      elevation: 2,
+                      child: SizedBox(
+                        child: Padding(
+                          child: Material(
+                              child: Padding(
+                                child: TextFormField(
+                                  controller: SDPClearer,
+                                  onFieldSubmitted: (value) {
+                                    widget.world.addSDPKey(
+                                        value, ScaffoldMessenger.of(context));
+                                    SDPClearer.clear();
+                                  },
+                                  enabled: widget.world.runStatus ==
+                                          RunStatus.stopped
                                       ? true
                                       : false,
-                              hintText: "Send command",
-                              helperText:
-                                  "Hit enter to send. Command has no effect if instance is stopped or starting.",
-                              helperStyle: TextStyle(color: Colors.white60),
-                              hintStyle: TextStyle(color: Colors.white60),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.white60)),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white))),
+                                  cursorColor: Colors.white,
+                                  style: TextStyle(color: Colors.white),
+                                  decoration: InputDecoration(
+                                      hintText: "Add server.properties key",
+                                      helperText: "Hit enter to send.",
+                                      helperStyle:
+                                          TextStyle(color: Colors.white60),
+                                      hintStyle:
+                                          TextStyle(color: Colors.white60),
+                                      enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.white60)),
+                                      focusedBorder: UnderlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.white))),
+                                ),
+                                padding: EdgeInsets.all(5),
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.elliptical(5, 5)),
+                              color: Theme.of(context).colorScheme.secondary),
+                          padding: EdgeInsets.all(15),
                         ),
-                        padding: EdgeInsets.all(5),
+                        width: 500,
                       ),
-                      borderRadius:
-                          const BorderRadius.all(Radius.elliptical(5, 5)),
-                      color: widget.world.runStatus == RunStatus.running
-                          ? Colors.green
-                          : Colors.grey,
-                    ),
-                    padding: EdgeInsets.all(15),
-                  ),
-                  width: 500,
-                ),
-              ),
+                    )
+                  : SizedBox.shrink(),
               Material(
                 borderRadius: const BorderRadius.all(Radius.elliptical(5, 5)),
                 elevation: 2,
-                color: Colors.white,
-                child: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Player List",
-                          style: TextStyle(
-                              fontSize: 35, fontWeight: FontWeight.bold),
-                        ),
-                        SizedBox.square(dimension: 15),
-                        playersInGame
-                      ],
-                    )),
-              ),
-              Material(
-                color: Colors.white,
-                borderRadius: const BorderRadius.all(Radius.elliptical(5, 5)),
-                elevation: 2,
-                child: SizedBox(
-                  child: Padding(
-                    child: Material(
-                      child: Padding(
-                        child: TextFormField(
-                          controller: SDPClearer,
-                          onFieldSubmitted: (value) {
-                            widget.world.addSDPKey(
-                                value, ScaffoldMessenger.of(context));
-                            SDPClearer.clear();
-                          },
-                          enabled: widget.world.runStatus == RunStatus.stopped
-                              ? true
-                              : false,
-                          cursorColor: Colors.white,
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                              hintText: "Add server.properties key",
-                              helperText:
-                                  "Hit enter to send. key=value. Server must be stopped.",
-                              helperStyle: TextStyle(color: Colors.white60),
-                              hintStyle: TextStyle(color: Colors.white60),
-                              enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.white60)),
-                              focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white))),
-                        ),
-                        padding: EdgeInsets.all(5),
-                      ),
-                      borderRadius:
-                          const BorderRadius.all(Radius.elliptical(5, 5)),
-                      color: widget.world.runStatus == RunStatus.stopped
-                          ? Colors.green
-                          : Colors.grey,
-                    ),
-                    padding: EdgeInsets.all(15),
-                  ),
-                  width: 500,
-                ),
-              ),
-              Material(
-                borderRadius: const BorderRadius.all(Radius.elliptical(5, 5)),
-                elevation: 2,
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.primary,
                 child: Padding(
                     padding: EdgeInsets.all(15),
                     child: Column(
@@ -672,7 +707,9 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
                         Text(
                           "Server configuration",
                           style: TextStyle(
-                              fontSize: 35, fontWeight: FontWeight.bold),
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                         SizedBox.square(dimension: 15),
                         serverConfig,
@@ -685,7 +722,10 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
                                   return EditServerConfigs(widget.world);
                                 });
                           },
-                          icon: Icon(Icons.edit),
+                          icon: Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
                           tooltip: "Edit",
                         )
                       ],

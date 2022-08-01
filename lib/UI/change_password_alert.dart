@@ -131,7 +131,7 @@ Widget changePasswordAlert(BuildContext context, SuperMCShare share) {
                         );
                       });
                 },
-                child: Text("Submit"))
+                child: Text("Submit", style: TextStyle(color: Colors.white)))
           ],
         )),
   );
