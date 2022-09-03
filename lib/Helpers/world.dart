@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+//import 'package:mpickflutter/Helpers/standard_socket_handler.dart';
 import 'package:mpickflutter/Helpers/super_mc_share.dart';
 import 'dart:async';
 
@@ -14,12 +15,24 @@ class World {
   Timer? waitForRun;
   int _waitForRunTimeout = 25;
 
+  //SocketHandler? stdoutHndlr;
+
   bool safetyLock = false; // Lock to prevent conflicts.
 
   SuperMCShare share;
 
   World(this.name, this.uuid, {required this.share});
+/*
+  Future<bool> tryConnect() async {
+    stdoutHndlr = SocketHandler(this);
+    return await stdoutHndlr!.tryConnect();
+  }
 
+  void sockDone() {
+    stdoutHndlr?.done();
+    stdoutHndlr = null;
+  }
+*/
   Future<RunStatus> getStatus() async {
     final getRunStatus = await share.getStatusOfUUID(uuid);
 
@@ -166,7 +179,7 @@ class World {
   }
 
   void startServer(ScaffoldMessengerState notifyOnError,
-      {bool tryStatic = false}) async {
+      {bool tryStatic = false, bool advertise = false}) async {
     if (await getStatus() != RunStatus.stopped) {
       return;
     }
@@ -175,7 +188,8 @@ class World {
         Uri.parse(
             "http://${share.serverIP}:${share.serverPort}/instance/$uuid/game/start"),
         headers: {"x-username": share.username, "x-password": share.password},
-        body: "try-static=${tryStatic ? "true" : "false"}");
+        body:
+            "try-static=${tryStatic ? "true" : "false"}&try-advert=${advertise ? "true" : "false"}");
 
     if (startRequest.statusCode != 200) {
       notifyOnError.clearSnackBars();
@@ -199,6 +213,8 @@ class World {
 
       if (runStatus == RunStatus.running) {
         _serverHasStarted();
+        //await tryConnect();
+        //print("tc");
       }
 
       if (runStatus == RunStatus.stopped) {
@@ -221,12 +237,12 @@ class World {
       return;
     }
 
-    if (await getStatus() != RunStatus.running) {
+    /* if (await getStatus() != RunStatus.running) {
       notifyOnError.clearSnackBars();
       notifyOnError.showSnackBar(
           SnackBar(content: Text("Cannot stop a server that isn't running.")));
       return;
-    }
+    } */
 
     final requestStop = await share.client.post(
         Uri.parse(

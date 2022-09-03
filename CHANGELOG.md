@@ -1,5 +1,18 @@
 # Minepicker (GUI) changelog
 
+## NALA patch 1
+
+- Interface overhaul
+    - Added dark mode
+    - Changed color scheme's primary color from Blue to Deep Purple
+    - Changed widgets to be more colorful
+- Server debug options
+    - Force refresh of remote versions list
+    - Reset remote instance states
+- Improved hang prevention on startup with connection timeouts
+- Added Advertise via mDNS start option to allow the instance to automatically pop up in the Multiplayer menu
+- Fixed issue where local versions list was not clear when being refreshed.
+
 ## SIMBA patch 4
 
 - Static port support

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mpickflutter/Helpers/determine_installation.dart';
@@ -33,13 +36,23 @@ class Determiner extends StatelessWidget {
         return;
       }
 
-      var ccheck = await Client().post(
-          Uri.parse(
-              "http://${determine['ip']}:${determine['port']}/account/check"),
-          body:
-              "username=${determine['username']}&password=${determine['password']}");
+      try {
+        var ccheck = await Client()
+            .post(
+                Uri.parse(
+                    "http://${determine['ip']}:${determine['port']}/account/check"),
+                body:
+                    "username=${determine['username']}&password=${determine['password']}")
+            .timeout(const Duration(seconds: 5));
 
-      if (ccheck.statusCode != 200) {
+        if (ccheck.statusCode != 200) {
+          Navigator.of(context)
+              .pushReplacement(MaterialPageRoute(builder: (context) {
+            return SetupWidget();
+          }));
+          return;
+        }
+      } on TimeoutException {
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (context) {
           return SetupWidget();

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:mpickflutter/Helpers/super_mc_share.dart';
 import 'package:mpickflutter/Helpers/world.dart';
-import 'package:mpickflutter/UI/bottom_sheets_main_menu.dart';
 import 'package:mpickflutter/UI/world_tile.dart';
+import 'package:mpickflutter/UI/Bottom Sheets/settings.dart';
+import 'package:mpickflutter/UI/Bottom Sheets/create_world.dart';
 
 class MainAppWidget extends StatefulWidget {
   const MainAppWidget({Key? key, required this.share}) : super(key: key);
@@ -41,7 +41,9 @@ class MainMenuState extends State<MainAppWidget> {
 
     setState(() {
       title = "Worlds";
-      currentBody = ListView(children: build);
+      currentBody = ListView(
+        children: build,
+      );
     });
   }
 
@@ -55,7 +57,7 @@ class MainMenuState extends State<MainAppWidget> {
               await widget.share.commitManifest();
             },
             icon: const Icon(Icons.arrow_downward),
-            label: const Text("Commit Trash")),
+            label: const Text("Commit Changes")),
         TextButton.icon(
             onPressed: () {
               showModalBottomSheet(

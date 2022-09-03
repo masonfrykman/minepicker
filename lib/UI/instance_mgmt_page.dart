@@ -1,11 +1,16 @@
+//
+// instance_mgmt_page.dart
+// Instance Management Widget
+// Main page to access & manage a running server instance
+//
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mpickflutter/Helpers/generate_math_problem.dart';
 import 'package:mpickflutter/Helpers/super_mc_share.dart';
 import 'package:mpickflutter/Helpers/world.dart';
-import 'package:mpickflutter/UI/bottom_sheets_main_menu.dart';
+import 'package:mpickflutter/UI/Bottom Sheets/edit_server_configs.dart';
 
 class InstanceMgmtPageWidget extends StatefulWidget {
   InstanceMgmtPageWidget(this.world, {Key? key, required this.share});
@@ -39,12 +44,14 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
       pageRefreshTimer!.cancel();
       pageRefreshTimer = null;
     }
+/*     if (widget.world.stdoutHndlr != null) {
+      widget.world.sockDone();
+    } */
     _lpcount = 20;
     super.dispose();
   }
 
   Widget portWidget() {
-    print(widget.world.remotePort);
     if (widget.world.remotePort == null) {
       return SizedBox.shrink();
     }
@@ -134,6 +141,14 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
                             onPressed: () {
                               widget.world.startServer(
                                   ScaffoldMessenger.of(context),
+                                  advertise: true);
+                              Navigator.of(context).pop();
+                            },
+                            child: Text("Advertise via mDNS (dynamic port)")),
+                        TextButton(
+                            onPressed: () {
+                              widget.world.startServer(
+                                  ScaffoldMessenger.of(context),
                                   tryStatic: true);
                               Navigator.of(context).pop();
                             },
@@ -217,11 +232,12 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
       return;
     }
     svcLock = true;
-    List<Text> gather = [];
+    List<SelectableText> gather = [];
 
     for (String cfgs in await widget.world.configs()) {
-      gather.add(Text(
+      gather.add(SelectableText(
         cfgs,
+        cursorColor: Colors.red,
         style: TextStyle(color: Colors.white),
       ));
     }
@@ -259,7 +275,8 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
                       autovalidateMode: AutovalidateMode.disabled,
                       decoration: InputDecoration(
                           labelText: "Answer",
-                          helperText: "Round to the nearest tenths place."),
+                          helperText:
+                              "Round to the tenths place in every circumstance.\nDecimals only."),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "An answer must be submitted.";
@@ -388,6 +405,13 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
     );
   }
 
+/*
+  void _tryCon() async {
+    if (widget.world.runStatus == RunStatus.running) {
+      await widget.world.tryConnect();
+    }
+  }
+*/
   @override
   Widget build(BuildContext context) {
     _loadServerConfigs();
@@ -623,6 +647,34 @@ class IMPWState extends State<InstanceMgmtPageWidget> {
                       ),
                     )
                   : SizedBox.shrink(),
+              /*  widget.world.runStatus == RunStatus.running
+                  ? Material(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius:
+                          const BorderRadius.all(Radius.elliptical(5, 5)),
+                      elevation: 2,
+                      child: SizedBox(
+                        child: Padding(
+                          child: Material(
+                            child: Padding(
+                              child: ListView(
+                                children:
+                                    widget.world.stdoutHndlr?.runningMessages ??
+                                        [Text("No socket to connect to.")],
+                              ),
+                              padding: EdgeInsets.all(5),
+                            ),
+                            borderRadius:
+                                const BorderRadius.all(Radius.elliptical(5, 5)),
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          padding: EdgeInsets.all(15),
+                        ),
+                        width: 400,
+                        height: 150,
+                      ),
+                    )
+                  : SizedBox.shrink(), */
               widget.world.runStatus == RunStatus.running
                   ? Material(
                       borderRadius:

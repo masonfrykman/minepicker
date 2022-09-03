@@ -90,7 +90,7 @@ class SetupWidgetState extends State<SetupWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Initial Configuration")),
+      appBar: AppBar(title: const Text("Login")),
       body: Center(
           child: Container(
         alignment: Alignment.center,

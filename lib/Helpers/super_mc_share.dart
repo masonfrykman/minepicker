@@ -21,9 +21,70 @@ class SuperMCShare {
 
   List<World> worlds = [];
 
+  List<String> hideUuids = [];
+  bool firstTimeHide = true;
+
   List<String> versions = [];
 
   Client client = Client();
+
+  void hideWorld(World world) {
+    if (hideUuids.contains(world.uuid)) {
+      return;
+    }
+    hideUuids.add(world.uuid);
+  }
+
+  void unhideWorld(World world) => hideUuids.remove(world.uuid);
+
+  Future<void> tryLoadHide() async {
+    final iDir = await getInstallation();
+    if (iDir == null) {
+      return;
+    }
+
+    if (await File("$iDir/hasHidden.cfg").exists()) {
+      if ((await File("$iDir/hasHidden.cfg").readAsString()).trim() == "true") {
+        firstTimeHide = false;
+      }
+    }
+
+    if (await File("$iDir/hidden.cfg").exists()) {
+      hideUuids = await File("$iDir/hidden.cfg").readAsLines();
+      if (hideUuids.isNotEmpty) {
+        firstTimeHide = false;
+      }
+    }
+  }
+
+  Future<void> saveHide() async {
+    final iDir = await getInstallation();
+    if (iDir == null) {
+      return;
+    }
+
+    await Directory(iDir).create(recursive: true);
+
+    final hf = File("$iDir/hidden.cfg").openWrite();
+
+    for (String hiddenUUID in hideUuids) {
+      hf.writeln(hiddenUUID);
+    }
+
+    await hf.flush();
+    await hf.close();
+
+    await File("$iDir/hasHidden.cfg")
+        .writeAsString(firstTimeHide == true ? "false" : "true");
+  }
+
+  Future<void> saveHideSilent() async {
+    try {
+      await saveHide();
+    } catch (err) {
+      var b = err;
+    }
+  }
 
   Future<bool> saveCredentialsToDisk() async {
     var iDir = await getInstallation();
@@ -125,6 +186,16 @@ class SuperMCShare {
     }
   }
 
+  Future<void> resetAllInstanceStates() async {
+    final req = await client.post(
+        Uri.parse("http://$serverIP:$serverPort/instance/resetAllStates"),
+        headers: {"x-username": username, "x-password": password});
+
+    if (req.statusCode != 200) {
+      return;
+    }
+  }
+
   Future<void> prepareVersionsListIfEmpty() async {
     if (versions.isEmpty) {
       await prepareVersionsList();
@@ -143,6 +214,10 @@ class SuperMCShare {
       return;
     }
 
+    if (versions.isNotEmpty) {
+      versions = [];
+    }
+
     for (dynamic worldJSONRep in JsonDecoder().convert(req.body)) {
       if (worldJSONRep["name"] == null) {
         continue;
@@ -150,6 +225,19 @@ class SuperMCShare {
 
       versions.add(worldJSONRep["name"]!);
     }
+  }
+
+  Future<bool> refreshRemoteVersionsList() async {
+    final req = await client.post(
+        Uri.parse("http://$serverIP:$serverPort/versionctrl/refresh"),
+        headers: {"x-username": username, "x-password": password});
+
+    if (req.statusCode != 200) {
+      return false;
+    }
+
+    await prepareVersionsList();
+    return true;
   }
 
   Future<String> submitWorldCreation(String name, String version,
