@@ -76,7 +76,7 @@ class World {
 
     final getter = await share.client.get(
         Uri.parse(
-            "http://${share.serverIP}:${share.serverPort}/instance/$uuid/all/authenticated"),
+            "http://${share.serverIP}:${share.serverPort}/instance/$uuid/info"),
         headers: {"x-username": share.username, "x-password": share.password});
 
     if (getter.statusCode != 200) {
