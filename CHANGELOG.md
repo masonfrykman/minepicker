@@ -1,6 +1,6 @@
 # Minepicker (GUI) changelog
 
-## NALA patch 1
+## 1.1.0
 
 - Interface overhaul
     - Added dark mode
@@ -13,11 +13,11 @@
 - Added Advertise via mDNS start option to allow the instance to automatically pop up in the Multiplayer menu
 - Fixed issue where local versions list was not clear when being refreshed.
 
-## SIMBA patch 4
+## 1.0.3
 
 - Static port support
 
-## SIMBA patch 3
+## 1.0.2
 
 - Added actual settings in the settings menu
 - Added Change password & Logout settings options
@@ -25,11 +25,11 @@
 - Fixed text alignment in the player list widget
 - Fixed text overflow on a main menu world entry title.
 
-## SIMBA patch 2
+## 1.0.1
 
 - Fix getting server version
 - Roll some bugs out.
 
-## SIMBA patch 1
+## 1.0.0
 
 - Initial release!
