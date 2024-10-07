@@ -1,16 +1,7 @@
-# mpickflutter
+# minepicker
 
-A new Flutter project.
+A desktop Flutter application to remotely manage Minecraft instances via HTTP.
 
-## Getting Started
+This is the frontend of a program I developed starting early 2022 during my Sophomore year of high school and continued developing throughout my Junior year up until early 2023.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+There is a backend portion of this program that actually manages the instances on it's filesystem and starts them via an HTTP server constructed using the little [shelf](https://pub.dev/packages/shelf) ecosystem of Dart packages.
